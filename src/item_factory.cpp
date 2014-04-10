@@ -857,13 +857,12 @@ void Item_factory::load_basic_info(JsonObject& jo, itype* new_item_template)
 
     // And then proceed to assign the correct field
     new_item_template->price = jo.get_int("price");
-    new_item_template->name = jo.get_string("name").c_str();
+    new_item_template->name = _(jo.get_string("name").c_str());
     if(jo.has_member("name_plural")) {
-      new_item_template->name_plural = jo.get_string("name_plural").c_str();
+      new_item_template->name_plural = _(jo.get_string("name_plural").c_str());
     } else {
       // default behaviour: Assume the regular plural form (appending an “s”)
-      new_item_template->name_plural = jo.get_string("name").c_str();
-      new_item_template->name_plural += "s";
+      new_item_template->name_plural = _((jo.get_string("name") + "s").c_str());
     }
     new_item_template->sym = jo.get_string("symbol")[0];
     new_item_template->color = color_from_string(jo.get_string("color"));
