@@ -34,6 +34,7 @@ ignorable = {
 # insert object "type" here IF AND ONLY IF
 # all of their translatable strings are in the following form:
 #   "name" member
+#   "name_plural" member
 #   "description" member
 #   "text" member
 #   "sound" member
@@ -73,6 +74,22 @@ automatically_convertible = {
     "VAR_VEH_PART",
     "vehicle_part",
     "vehicle",
+}
+
+# for these objects the plural form is automatically created if missing:
+automatically_create_plural = {
+    "AMMO",
+    "ARMOR",
+    "BIONIC_ITEM",
+    "BOOK",
+    "COMESTIBLE",
+    "CONTAINER",
+    "GENERIC",
+    "GUNMOD",
+    "GUN",
+    "TOOL",
+    "TOOL_ARMOR",
+    "VAR_VEH_PART"
 }
 
 # these objects can be automatically converted, but use format strings
@@ -227,6 +244,13 @@ def extract(item, infilename):
     wrote = False
     if "name" in item:
         writestr(outfile, item["name"], **kwargs)
+        wrote = True
+    if "name_plural" in item:
+        writestr(outfile, item["name_plural"], **kwargs)
+        wrote = True
+    elif "name" in item and object_type in automatically_create_plural:
+        # no name_plural entry in json, use default constructed (name+"s"), as in item_factory.cpp
+        writestr(outfile, "%ss" % item["name"], **kwargs)
         wrote = True
     if "description" in item:
         writestr(outfile, item["description"], **kwargs)
